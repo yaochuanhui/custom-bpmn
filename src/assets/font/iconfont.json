@@ -1,0 +1,65 @@
+{
+  "id": "1570069",
+  "name": "bpmn流程",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon",
+  "description": "不描述",
+  "glyphs": [
+    {
+      "icon_id": "648779",
+      "name": "人群",
+      "font_class": "renqun",
+      "unicode": "e623",
+      "unicode_decimal": 58915
+    },
+    {
+      "icon_id": "2733962",
+      "name": "会签任务",
+      "font_class": "huiqianrenwu",
+      "unicode": "e6ec",
+      "unicode_decimal": 59116
+    },
+    {
+      "icon_id": "3427867",
+      "name": "判断题",
+      "font_class": "icon-",
+      "unicode": "e624",
+      "unicode_decimal": 58916
+    },
+    {
+      "icon_id": "4889699",
+      "name": "开始",
+      "font_class": "kaishi",
+      "unicode": "e614",
+      "unicode_decimal": 58900
+    },
+    {
+      "icon_id": "5022346",
+      "name": "人数",
+      "font_class": "renshu",
+      "unicode": "e61f",
+      "unicode_decimal": 58911
+    },
+    {
+      "icon_id": "6473069",
+      "name": "类型-分支节点",
+      "font_class": "leixing-fenzhijiedian",
+      "unicode": "e6e8",
+      "unicode_decimal": 59112
+    },
+    {
+      "icon_id": "6473072",
+      "name": "类型-归并节点",
+      "font_class": "leixing-guibingjiedian",
+      "unicode": "e6e9",
+      "unicode_decimal": 59113
+    },
+    {
+      "icon_id": "7560635",
+      "name": "结束时间",
+      "font_class": "jieshushijian",
+      "unicode": "e7be",
+      "unicode_decimal": 59326
+    }
+  ]
+}
