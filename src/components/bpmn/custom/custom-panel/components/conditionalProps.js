@@ -2,7 +2,7 @@
 import {
 	is,
 	getBusinessObject
-} from './../../bpmn-js/lib/util/ModelUtil';
+} from './../../../bpmn-js/lib/util/ModelUtil';
 var domQuery = require('min-dom').query;
 const scriptImplementation = require('bpmn-js-properties-panel/lib/provider/camunda/parts/implementation/Script');
 
@@ -15,7 +15,7 @@ export default function (group, element, bpmnFactory, translate) {
 	// 判断节点类型
 	if (bo.eventDefinitions) {
 		forEach(bo.eventDefinitions, function (event) {
-			if (is(event, 'bpmn:ConditionalEventDefinition')) {
+			if (is(event, 'bpmn:UserTask')) {
 				eventDefinition = event;
 			}
 		});

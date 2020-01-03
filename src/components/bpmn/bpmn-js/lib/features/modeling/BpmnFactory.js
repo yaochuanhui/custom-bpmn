@@ -51,20 +51,17 @@ BpmnFactory.prototype._ensureId = function(element, idfixed) {
 };
 
 // 自定义的idfixed，用于区分是什么操作的serviceTask
-BpmnFactory.prototype.create = function(type, attrs,idfixed) {
+BpmnFactory.prototype.create = function(type, attrs, idfixed) {
   var element = this._model.create(type, attrs || {});
   this._ensureId(element, idfixed);
-
   return element;
 };
-
 
 BpmnFactory.prototype.createDiLabel = function() {
   return this.create('bpmndi:BPMNLabel', {
     bounds: this.createDiBounds()
   });
 };
-
 
 BpmnFactory.prototype.createDiShape = function(semantic, bounds, attrs) {
 
@@ -74,11 +71,9 @@ BpmnFactory.prototype.createDiShape = function(semantic, bounds, attrs) {
   }, attrs));
 };
 
-
 BpmnFactory.prototype.createDiBounds = function(bounds) {
   return this.create('dc:Bounds', bounds);
 };
-
 
 BpmnFactory.prototype.createDiWaypoints = function(waypoints) {
   var self = this;
@@ -91,7 +86,6 @@ BpmnFactory.prototype.createDiWaypoints = function(waypoints) {
 BpmnFactory.prototype.createDiWaypoint = function(point) {
   return this.create('dc:Point', pick(point, [ 'x', 'y' ]));
 };
-
 
 BpmnFactory.prototype.createDiEdge = function(semantic, waypoints, attrs) {
   return this.create('bpmndi:BPMNEdge', assign({

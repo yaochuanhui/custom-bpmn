@@ -1,10 +1,11 @@
 /* eslint-disable */
+// 扩展属性新增
 import entryFactory from 'bpmn-js-properties-panel/lib/factory/EntryFactory';
 var Ids = require('ids').default;
 import {
 	is,
 	getBusinessObject
-} from './../../bpmn-js/lib/util/ModelUtil';
+} from './../../../bpmn-js/lib/util/ModelUtil';
 var assign = require('lodash/assign');
 var map = require('lodash/map'),
 	forEach = require('lodash/forEach'),
@@ -49,9 +50,7 @@ function createParent(element, bo, bpmnFactory) {
 	};
 }
 export default function (group, element, bpmnFactory) {
-	// Only return an entry, if the currently selected
-	// element is a start event.
-	if (is(element, 'bpmn:ServiceTask')) {
+	if (is(element, 'bpmn:UserTask')) {
 		var bo = getBusinessObject(element);
 		group.entries.push(entryFactory.table({
 			id: 'properties',
@@ -107,11 +106,6 @@ export default function (group, element, bpmnFactory) {
 				forEach(['name', 'value'], function (prop) {
 					propertyProps[prop] = undefined;
 				});
-				// create id if necessary
-				// if (['name', 'value'].indexOf('id') >= 0) {
-				// 	var ids = new Ids([32, 32, 1]);
-				// 	propertyProps.id = ids.nextPrefixed('Property_');
-				// }
 				var property = (function () {
 					var el = bpmnFactory.create('camunda:Property', propertyProps)
 					el.$parent = properties;
@@ -143,26 +137,6 @@ export default function (group, element, bpmnFactory) {
 					}
 				};
 			},
-			// validate: function (element, value, node, idx) {
-			// 	// validate id if necessary
-			// 	if (['name', 'value'].indexOf('id') >= 0) {
-
-			// 		var parent = bo.extensionElements,
-			// 			properties = getPropertyValues(parent),
-			// 			property = properties[idx];
-
-			// 		if (property) {
-			// 			// check if id is valid
-			// 			var validationError = utils.isIdValid(property, value.id, translate);
-
-			// 			if (validationError) {
-			// 				return {
-			// 					id: validationError
-			// 				};
-			// 			}
-			// 		}
-			// 	}
-			// },
 			removeElement: function (element, node, idx) {
 				var commands = [],
 					parent = bo.extensionElements,
@@ -211,17 +185,12 @@ export default function (group, element, bpmnFactory) {
 										}
 									});
 								}
-
-								// commands.push(extensionElementsHelper.removeEntry(bo, element, value));
 							}
 						});
 					}
 				}
-
 				return commands;
 			}
 		}));
-
-
 	}
 }

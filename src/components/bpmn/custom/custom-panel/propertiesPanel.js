@@ -1,20 +1,10 @@
 /* eslint-disable */
 'use strict';
 import Vue from 'vue';
-
-// var escapeHTML = require('bpmn-js-properties-panel/lib/Utils').escapeHTML;
-
 var domify = require('min-dom').domify;
-
-
-
-var getBusinessObject = require('./../../bpmn-js/lib/util/ModelUtil').getBusinessObject;
-var is = require('./../../bpmn-js/lib/util/ModelUtil').is;
-
+var getBusinessObject = require('../../bpmn-js/lib/util/ModelUtil').getBusinessObject;
+var is = require('../../bpmn-js/lib/util/ModelUtil').is;
 import TaskModal from './components/taskModal';
-
-var HIDE_CLASS = 'bpp-hidden';
-var DEBOUNCE_DELAY = 300;
 /**
  * A properties panel implementation.
  *
@@ -35,17 +25,14 @@ var DEBOUNCE_DELAY = 300;
  * @param {CommandStack} commandStack
  */
 export default function PropertiesPanel(config, eventBus, modeling,bpmnFactory, commandStack, canvas) {
-
 	this._eventBus = eventBus;
 	this._modeling = modeling;
 	this._commandStack = commandStack;
 	this._canvas = canvas;
 	this._bpmnFactory = bpmnFactory
-
 	this.createModal();
 	this._init(config);
 }
-
 PropertiesPanel.$inject = [
 	'config.propertiesPanel',
 	'eventBus',
@@ -54,13 +41,10 @@ PropertiesPanel.$inject = [
 	'commandStack',
 	'canvas'
 ];
-
 PropertiesPanel.prototype.createModal = function () {
 	let self = this
 	var parent = document.createElement('div');
 	document.body.appendChild(parent)
-
-
 	// 任务弹框
 	var taskModalContainer = domify('<div class="task-modal" id="task-modal"></div>');
 	parent.appendChild(taskModalContainer)
@@ -84,12 +68,28 @@ PropertiesPanel.prototype.createModal = function () {
 				});
 			},
 			okFunc(data) {
-				var bpmnFactory = self._bpmnFactory
-				// console.log(data)
+        var bpmnFactory = self._bpmnFactory
 				var element = self.element
-				var bo = element.businessObject;
-				bo.set('name', data.name)
-				if(bo.extensionElements.values) bo.extensionElements.values = []
+        var bo = element.businessObject;
+        bo.set('name', data.name)
+        // 自定义单选框属性
+        if(data.checkList) {
+          bo.set('camunda:checkList', data.checkList)
+          bo['camunda:checkList'] = data.checkList
+        }
+        console.log(data);
+        // 自定义扩展属性
+        if(bo.extensionElements && bo.extensionElements.values) {
+					bo.extensionElements.values = []
+        } else {
+					var extensionDataProp = (function () {
+						var el = bpmnFactory.create('bpmn:ExtensionElements', {values:[]})
+						el.$parent = bo;
+						return el
+          })()
+          bo.set('extensionElements', extensionDataProp)
+          bo['extensionElements'] = extensionDataProp
+        }
 				if(data.extensionData) {
 					var Properties = (function () {
 						var el = bpmnFactory.create('camunda:Properties', {values:[]})
@@ -108,11 +108,11 @@ PropertiesPanel.prototype.createModal = function () {
 						})()
 						Properties.values.push(Property)
 					})
-				}
+        }
 				self._commandStack.execute("element.updateLabel", {
 					element: self.element,
 					newLabel: self.element.businessObject.name
-				});
+        });
 				this.show = false
 			}
 		},
@@ -120,14 +120,10 @@ PropertiesPanel.prototype.createModal = function () {
 		template: `<task-modal :show="show" :data="data" @handleOk="okFunc" @handleCancel="close" />`
 	}))
 }
-
 PropertiesPanel.prototype._init = function (config) {
-
 	var canvas = this._canvas,
 		eventBus = this._eventBus;
-
 	var self = this;
-
 	/**
 	 * Select the root element once it is added to the canvas
 	 */
@@ -150,7 +146,7 @@ PropertiesPanel.prototype._init = function (config) {
 
 	//     self.update(newElement);
 	//   });
-	eventBus.on('element.dblclick', function (e) {
+	eventBus.on('element.click', function (e) {
 		var newElement = self.element = e.element;
 		var rootElement = canvas.getRootElement();
 		if (is(newElement, "bpmn:Process")) {
@@ -162,19 +158,20 @@ PropertiesPanel.prototype._init = function (config) {
 		}
 		if(is(newElement,"bpmn:ServiceTask")) {
 			var element = getBusinessObject(newElement)
-			let extensionData = []
-			console.log(element.extensionElements)
-			if(element.extensionElements && element.extensionElements.values.length > 0) {
+      let extensionData = []
+      if(element.extensionElements && element.extensionElements.values.length > 0) {
 				var value = element.extensionElements.values[0].values
 				value.forEach(item => {
 					extensionData.push({name: item.name, value: item.value})
 				})
 			}
-			self.TaskModalCom.data = {extensionData, name: element.name}
+      let str = '';
+      if (element['camunda:checkList']) {
+        str = element['camunda:checkList']
+      }
+			self.TaskModalCom.data = {extensionData, name: element.name, checkList: str}
 			self.TaskModalCom.show = true
 		}
-		
-		// self.update(newElement);
 	});
 	// eventBus.on('element.click', function (e) {
 	// 	var newElement = e.element;
@@ -186,22 +183,18 @@ PropertiesPanel.prototype._init = function (config) {
 
 	// 	self.update(newElement, true);
 	// });
-
-
 };
-
 function isImplicitRoot(element) {
 	return element.id === '__implicitroot';
 }
-
 // 获取或创建扩展标签
-function getOrCreateExtensionElement(element, bpmnFactory) {
-	var bo = getBusinessObject(element)
-	if(!bo.extensionElements) {
-		var ee = bpmnFactory.create("bpmn:ExtensionElements", {
-			values: []
-		})
-		bo.extensionElements = ee;
-	}
-	return bo.extensionElements
-}
+// function getOrCreateExtensionElement(element, bpmnFactory) {
+// 	var bo = getBusinessObject(element)
+// 	if(!bo.extensionElements) {
+// 		var ee = bpmnFactory.create("bpmn:ExtensionElements", {
+// 			values: []
+// 		})
+// 		bo.extensionElements = ee;
+// 	}
+// 	return bo.extensionElements
+// }

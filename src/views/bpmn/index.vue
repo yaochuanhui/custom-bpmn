@@ -21,6 +21,7 @@ import propertiesPanelModule from 'bpmn-js-properties-panel'
 import camundaModdleDescriptor from './custom-elements'
 import customModdleDescriptor from '../../components/bpmn/custom/custom-panel'
 // import xmlStr from './diagram.bpmn'
+import customPanel from '../../components/bpmn/custom/custom-panel/customPanel'
 export default {
   data () {
     return {
@@ -34,22 +35,21 @@ export default {
   methods: {
     createNewDiagram () {
       const bpmnXmlStr = '<?xml version="1.0" encoding="UTF-8"?>\n' +
-        '<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd" id="sample-diagram" targetNamespace="http://bpmn.io/schema/bpmn">\n' +
-        '  <bpmn2:process id="Process_1" isExecutable="false">\n' +
-        '    <bpmn2:startEvent id="StartEvent_1"/>\n' +
-        '  </bpmn2:process>\n' +
+        '<bpmn:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd" id="sample-diagram" targetNamespace="http://bpmn.io/schema/bpmn">\n' +
+        '  <bpmn:process id="Process_1" isExecutable="false">\n' +
+        '    <bpmn:startEvent id="StartEvent_start-event_15fsz9l"/>\n' +
+        '  </bpmn:process>\n' +
         '  <bpmndi:BPMNDiagram id="BPMNDiagram_1">\n' +
         '    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">\n' +
-        '      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">\n' +
+        '      <bpmndi:BPMNShape id="StartEvent_start-event_15fsz9l_di" bpmnElement="StartEvent_start-event_15fsz9l">\n' +
         '        <dc:Bounds height="36.0" width="36.0" x="412.0" y="240.0"/>\n' +
         '      </bpmndi:BPMNShape>\n' +
         '    </bpmndi:BPMNPlane>\n' +
         '  </bpmndi:BPMNDiagram>\n' +
-        '</bpmn2:definitions>'
+        '</bpmn:definitions>'
       // 将字符串转换成图显示出来
       this.bpmnModeler.importXML(bpmnXmlStr, function (err) {
         if (err) {
-          // console.error(err)
         }
       })
     },
@@ -60,8 +60,12 @@ export default {
     },
     // 下载为SVG格式,done是个函数，调用的时候传入的
     saveDiagram (done) {
+      // let _this = this
       // 把传入的done再传给bpmn原型的saveXML函数调用
       this.bpmnModeler.saveXML({ format: true }, function (err, xml) {
+        // let xmldoc = _this.loadXML(xml)
+        // console.log(xmldoc)
+        // var elements = xmlDoc.getElementsByTagName('Company')
         done(err, xml)
       })
     },
@@ -94,7 +98,8 @@ export default {
       },
       additionalModules: [
         propertiesPanelModule,
-        customModdleDescriptor
+        customModdleDescriptor,
+        customPanel
       ],
       moddleExtensions: {
         camunda: camundaModdleDescriptor

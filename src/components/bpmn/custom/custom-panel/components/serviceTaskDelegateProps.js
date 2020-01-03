@@ -1,4 +1,5 @@
 /* eslint-disable */
+// 服务自定义属性
 import entryFactory from 'bpmn-js-properties-panel/lib/factory/EntryFactory';
 var assign = require('lodash/assign');
 var map = require('lodash/map');
@@ -6,22 +7,22 @@ var map = require('lodash/map');
 import {
 	is,
 	getBusinessObject
-} from './../../bpmn-js/lib/util/ModelUtil';
+} from './../../../bpmn-js/lib/util/ModelUtil';
 
 export default function (group, element, bpmnFactory, translate) {
 	// template type
-	// 详情部分 下拉选择使用
+	// 详情部分 下拉选择使用——下拉框数据列表
 	var DEFAULT_OPTIONS = [{
 			value: 'class',
-			name: translate('Java类')
+			name: '选项一'
 		},
 		{
 			value: 'expression',
-			name: translate('表达式')
+			name: '选项二'
 		},
 		{
 			value: 'delegateExpression',
-			name: translate('代理表达式')
+			name: '选项三'
 		}
 	];
 	var selectOptions = DEFAULT_OPTIONS;
@@ -55,7 +56,6 @@ export default function (group, element, bpmnFactory, translate) {
 		expression: 'camunda:expression',
 		delegateExpression: 'camunda:delegateExpression'
 	};
-
 	function getDelegationLabel(type) {
 		switch (type) {
 			case 'class':
@@ -68,41 +68,30 @@ export default function (group, element, bpmnFactory, translate) {
 				return '';
 		}
 	}
-	// Only return an entry, if the currently selected
-	// element is a start event.
 	if (is(element, 'bpmn:ServiceTask')) {
 		group.entries.push(entryFactory.selectBox({
 			id: 'implementation',
 			label: '实现方式',
 			selectOptions: selectOptions,
 			modelProperty: 'implType',
-
 			get: function (element, node) {
 				return {
 					implType: getType(element) || ''
 				};
 			},
-
 			set: function (element, values, node) {
-				var bo = getBusinessObject(element);
+        var bo = getBusinessObject(element);
 				var oldType = getType(element);
 				var newType = values.implType;
-
 				var props = assign({}, DELEGATE_PROPS);
-
 				if (DEFAULT_DELEGATE_PROPS.indexOf(newType) !== -1) {
-
 					var newValue = '';
 					if (DEFAULT_DELEGATE_PROPS.indexOf(oldType) !== -1) {
 						newValue = bo.get('camunda:' + oldType);
 					}
-					console.log(newValue)
 					props['camunda:' + newType] = newValue;
 				}
-
-
-				var commands = [];
-				// commands.push(cmdHelper.updateBusinessObject(element, bo, props));
+        var commands = [];
 				commands.push({
 					cmd: 'properties-panel.update-businessobject',
 					context: {
@@ -110,10 +99,8 @@ export default function (group, element, bpmnFactory, translate) {
 						businessObject: bo,
 						properties: props
 					}
-				});
-				console.log(commands)
+        });
 				return commands;
-
 			}
 		}));
 		group.entries.push(entryFactory.textField({
@@ -152,7 +139,6 @@ export default function (group, element, bpmnFactory, translate) {
 					delegate: translate('必填')
 				} : {};
 			},
-
 			hidden: function (element, node) {
 				return !(DEFAULT_DELEGATE_PROPS.indexOf(getType(element)) !== -1);
 			}
@@ -175,13 +161,6 @@ export default function (group, element, bpmnFactory, translate) {
 				var props = {
 					'camunda:resultVariable': resultVariable
 				};
-
-				// if (is(bo, 'camunda:DmnCapable') && !resultVariable) {
-				// 	props = assign({
-				// 		'camunda:mapDecisionResult': 'resultList'
-				// 	}, props);
-				// }
-
 				return {
 					cmd: 'properties-panel.update-businessobject',
 					context: {
@@ -194,7 +173,6 @@ export default function (group, element, bpmnFactory, translate) {
 			hidden: function (element, node) {
 				return getType(element) !== 'expression';
 			}
-
 		}))
 
 	}

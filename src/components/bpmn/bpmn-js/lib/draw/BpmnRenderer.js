@@ -984,55 +984,56 @@ export default function BpmnRenderer(
 
 			return task;
 		},
-		'bpmn:UserTask': function (parentGfx, element) {
-			var task = renderer('bpmn:Task')(parentGfx, element, {
-				strokeColor: UserTask_StrokeColor
-			});
+		'bpmn:UserTask': function (parentGfx, element, attrs = {}) {
+      var task = renderer('bpmn:Task')(parentGfx, element,attrs);
+			// var task = renderer('bpmn:Task')(parentGfx, element, {
+			// 	strokeColor: UserTask_StrokeColor
+			// });
 
-			var x = 15;
-			var y = 12;
+			// var x = 15;
+			// var y = 12;
 
-			var pathData = pathMap.getScaledPath('TASK_TYPE_USER_1', {
-				abspos: {
-					x: x,
-					y: y
-				}
-			});
+			// var pathData = pathMap.getScaledPath('TASK_TYPE_USER_1', {
+			// 	abspos: {
+			// 		x: x,
+			// 		y: y
+			// 	}
+			// });
 
-			/* user path */
-			drawPath(parentGfx, pathData, {
-				strokeWidth: 0.5,
-				fill: getFillColor(element, defaultFillColor),
-				stroke: getStrokeColor(element, UserTask_StrokeColor)
-			});
+			// /* user path */
+			// drawPath(parentGfx, pathData, {
+			// 	strokeWidth: 0.5,
+			// 	fill: getFillColor(element, defaultFillColor),
+			// 	stroke: getStrokeColor(element, UserTask_StrokeColor)
+			// });
 
-			var pathData2 = pathMap.getScaledPath('TASK_TYPE_USER_2', {
-				abspos: {
-					x: x,
-					y: y
-				}
-			});
+			// var pathData2 = pathMap.getScaledPath('TASK_TYPE_USER_2', {
+			// 	abspos: {
+			// 		x: x,
+			// 		y: y
+			// 	}
+			// });
 
-			/* user2 path */
-			drawPath(parentGfx, pathData2, {
-				strokeWidth: 0.5,
-				fill: getFillColor(element, defaultFillColor),
-				stroke: getStrokeColor(element, UserTask_StrokeColor)
-			});
+			// /* user2 path */
+			// drawPath(parentGfx, pathData2, {
+			// 	strokeWidth: 0.5,
+			// 	fill: getFillColor(element, defaultFillColor),
+			// 	stroke: getStrokeColor(element, UserTask_StrokeColor)
+			// });
 
-			var pathData3 = pathMap.getScaledPath('TASK_TYPE_USER_3', {
-				abspos: {
-					x: x,
-					y: y
-				}
-			});
+			// var pathData3 = pathMap.getScaledPath('TASK_TYPE_USER_3', {
+			// 	abspos: {
+			// 		x: x,
+			// 		y: y
+			// 	}
+			// });
 
-			/* user3 path */
-			drawPath(parentGfx, pathData3, {
-				strokeWidth: 0.5,
-				fill: getStrokeColor(element, UserTask_StrokeColor),
-				stroke: getStrokeColor(element, UserTask_StrokeColor)
-			});
+			// /* user3 path */
+			// drawPath(parentGfx, pathData3, {
+			// 	strokeWidth: 0.5,
+			// 	fill: getStrokeColor(element, UserTask_StrokeColor),
+			// 	stroke: getStrokeColor(element, UserTask_StrokeColor)
+			// });
 
 			return task;
 		},
@@ -1292,27 +1293,27 @@ export default function BpmnRenderer(
 			return diamond;
 		},
 		// 互斥网关
-		'bpmn:ExclusiveGateway': function (parentGfx, element) {
-			var diamond = renderer('bpmn:Gateway')(parentGfx, element, {strokeColor: '#52B415'});
+		'bpmn:ExclusiveGateway': function (parentGfx, element, attrs = {}) {
+      var diamond = renderer('bpmn:Gateway')(parentGfx, element,attrs);
+			  //  var diamond = renderer('bpmn:Gateway')(parentGfx, element, {strokeColor: '#52B415'});
+			  // var pathData = pathMap.getScaledPath('GATEWAY_EXCLUSIVE', {
+			  //   xScaleFactor: 0.4,
+			  //   yScaleFactor: 0.4,
+			  //   containerWidth: element.width,
+			  //   containerHeight: element.height,
+			  //   position: {
+			  //     mx: 0.32,
+			  //     my: 0.3
+			  //   }
+			  // });
 
-			  var pathData = pathMap.getScaledPath('GATEWAY_EXCLUSIVE', {
-			    xScaleFactor: 0.4,
-			    yScaleFactor: 0.4,
-			    containerWidth: element.width,
-			    containerHeight: element.height,
-			    position: {
-			      mx: 0.32,
-			      my: 0.3
-			    }
-			  });
-
-			  if ((getDi(element).isMarkerVisible)) {
-			    drawPath(parentGfx, pathData, {
-			      strokeWidth: 1,
-			      fill: getStrokeColor(element, '#fff'),
-			      stroke: getStrokeColor(element, '#fff')
-			    });
-			  }
+			  // if ((getDi(element).isMarkerVisible)) {
+			  //   drawPath(parentGfx, pathData, {
+			  //     strokeWidth: 1,
+			  //     fill: getStrokeColor(element, '#fff'),
+			  //     stroke: getStrokeColor(element, '#fff')
+			  //   });
+			  // }
 
 			return diamond;
 		},

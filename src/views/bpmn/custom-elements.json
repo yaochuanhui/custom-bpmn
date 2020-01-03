@@ -430,6 +430,11 @@
           "name": "resultVariable",
           "isAttr": true,
           "type": "String"
+        },
+        {
+          "name": "test",
+          "isAttr": true,
+          "type": "String"
         }
       ]
     },
@@ -798,7 +803,8 @@
           "bpmn:BoundaryEvent",
           "bpmn:CallActivity",
           "bpmn:SubProcess",
-          "bpmn:Process"
+          "bpmn:Process",
+          "bpmn:moumou"
         ]
       },
       "properties": [
