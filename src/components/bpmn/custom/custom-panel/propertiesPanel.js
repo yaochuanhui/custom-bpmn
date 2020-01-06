@@ -73,11 +73,10 @@ PropertiesPanel.prototype.createModal = function () {
         var bo = element.businessObject;
         bo.set('name', data.name)
         // 自定义单选框属性
-        if(data.checkList) {
-          bo.set('camunda:checkList', data.checkList)
-          bo['camunda:checkList'] = data.checkList
-        }
-        console.log(data);
+        // if(data.checkList) {
+        //   bo.set('camunda:checkList', data.checkList)
+        //   bo['camunda:checkList'] = data.checkList
+        // }
         // 自定义扩展属性
         if(bo.extensionElements && bo.extensionElements.values) {
 					bo.extensionElements.values = []
@@ -90,24 +89,25 @@ PropertiesPanel.prototype.createModal = function () {
           bo.set('extensionElements', extensionDataProp)
           bo['extensionElements'] = extensionDataProp
         }
-				if(data.extensionData) {
-					var Properties = (function () {
-						var el = bpmnFactory.create('camunda:Properties', {values:[]})
-						el.$parent = bo.extensionElements;
-						return el
-					})()
-					bo.extensionElements.values.push(Properties)
-					data.extensionData.forEach(item => {
-						var propertyProps = {};
-						propertyProps.name = item.name;
-						propertyProps.value = item.value;
-						var Property = (function () {
-							var el = bpmnFactory.create('camunda:Property', propertyProps)
-							el.$parent = Properties;
-							return el
-						})()
-						Properties.values.push(Property)
-					})
+        var Properties = (function () {
+          var el = bpmnFactory.create('camunda:Properties', {values:[]})
+          el.$parent = bo.extensionElements;
+          return el
+        })()
+        bo.extensionElements.values.push(Properties)
+        for (let key in data) {
+          if (key !== 'name') {
+            data[key] = JSON.stringify(data[key]);
+            var propertyProps = {};
+            propertyProps.name = key;
+            propertyProps.value = data[key];
+            var Property = (function () {
+              var el = bpmnFactory.create('camunda:Property', propertyProps)
+              el.$parent = Properties;
+              return el
+            })()
+            Properties.values.push(Property)
+          }
         }
 				self._commandStack.execute("element.updateLabel", {
 					element: self.element,
@@ -146,32 +146,27 @@ PropertiesPanel.prototype._init = function (config) {
 
 	//     self.update(newElement);
 	//   });
-	eventBus.on('element.click', function (e) {
+	eventBus.on('element.dblclick', function (e) {
 		var newElement = self.element = e.element;
-		var rootElement = canvas.getRootElement();
+    let nodeType;
 		if (is(newElement, "bpmn:Process")) {
-			// ignore bpmn:process click event
-			return;
-		}
-		if (isImplicitRoot(rootElement)) {
-			return;
+      nodeType = 'Process';
 		}
 		if(is(newElement,"bpmn:ServiceTask")) {
-			var element = getBusinessObject(newElement)
-      let extensionData = []
-      if(element.extensionElements && element.extensionElements.values.length > 0) {
-				var value = element.extensionElements.values[0].values
-				value.forEach(item => {
-					extensionData.push({name: item.name, value: item.value})
-				})
-			}
-      let str = '';
-      if (element['camunda:checkList']) {
-        str = element['camunda:checkList']
-      }
-			self.TaskModalCom.data = {extensionData, name: element.name, checkList: str}
-			self.TaskModalCom.show = true
-		}
+      nodeType = 'ServiceTask';
+    }
+    var element = getBusinessObject(newElement)
+    let extensionData = [];
+    let dataObj = {extensionData, name: element.name};
+    if(element.extensionElements && element.extensionElements.values.length > 0) {
+      var value = element.extensionElements.values[0].values
+      value.forEach(item => {
+        dataObj[item.name] = JSON.parse(item.value);
+      })
+    }
+    dataObj.nodeType = nodeType;
+    self.TaskModalCom.data = dataObj
+    self.TaskModalCom.show = true
 	});
 	// eventBus.on('element.click', function (e) {
 	// 	var newElement = e.element;

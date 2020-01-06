@@ -1,13 +1,13 @@
 
 <template>
-  <div>
+  <div class="shuxing">
     <el-dialog :visible="show" @close="handleCancel">
       <div class="content" v-show="data.extensionData">
         <el-row style="margin-top: 20px;">
           <el-col :span="8">标签名称</el-col>
           <el-col :span="16"><el-input v-model="data.name"></el-input></el-col>
         </el-row>
-        <el-row style="margin-top: 20px;">
+        <el-row style="margin-top: 20px;" v-if="data.nodeType==='ServiceTask'">
           <el-col :span="8">是否自动执行</el-col>
           <el-col :span="16">
             <el-radio-group v-model="data.checkList">
@@ -16,7 +16,7 @@
             </el-radio-group>
           </el-col>
         </el-row>
-        <!-- <el-row style="margin-top: 20px;">
+        <el-row style="margin-top: 20px;">
           <el-col :span="8">下拉选择</el-col>
           <el-col :span="16">
             <el-select v-model="data.selectList" multiple placeholder="请选择" style="width:100%">
@@ -28,7 +28,7 @@
               </el-option>
             </el-select>
           </el-col>
-        </el-row> -->
+        </el-row>
         <el-row style="margin-top: 30px;">
           <el-col :span="8">属性名</el-col>
           <el-col :span="14">属性值</el-col>
